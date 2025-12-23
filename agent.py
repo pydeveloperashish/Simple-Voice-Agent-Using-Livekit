@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
 from livekit import agents, rtc
 from livekit.agents import AgentServer, AgentSession, Agent, room_io, JobContext
+from livekit.agents import function_tool
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from livekit.plugins import noise_cancellation, silero
-
+from datetime import datetime
 
 load_dotenv()
 
@@ -16,6 +17,12 @@ class Assistant(Agent):
             Your responses are concise, to the point, and without any complex formatting or punctuation including emojis, asterisks, or other symbols.
             You are curious, friendly, and have a sense of humor.""",
         )
+
+    
+    @function_tool
+    async def get_current_date_and_time(self, city: str) -> str:
+        """Get the current date and time in a given city."""
+        return f"The current date and time in {city} is {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
 
 server = AgentServer()
